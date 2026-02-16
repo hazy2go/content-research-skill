@@ -1,6 +1,6 @@
 ---
 name: content-research
-description: Research trending topics and generate platform-specific content. Triggers on "research [topic]", "what's new in [topic]", "content for [platform]", "create posts about [topic]", or "find news about [topic]". Supports Reddit, X/Twitter, Discord, LinkedIn with multiple content angles per platform.
+description: Research trending topics and generate platform-specific content. Triggers on "research [topic]", "what's new in [topic]", "content for [platform]", "create posts about [topic]". Supports Reddit, X/Twitter, Discord, LinkedIn with multiple content angles per platform.
 ---
 
 # Content Research
@@ -15,13 +15,7 @@ Two-phase workflow: **Research** → **Create**
 
 ### 1. Search
 
-**Browser method (default):**
-```
-browser(action="open", profile="openclaw", targetUrl="https://duckduckgo.com/?q=[topic]+news&df=w")
-browser(action="snapshot") → extract article URLs
-```
-
-**API method (if Brave configured):**
+Use web search to find recent news:
 ```
 web_search(query="[topic] news", freshness="pw")
 ```
@@ -33,12 +27,10 @@ web_search(query="[topic] news", freshness="pw")
 
 ### 2. Fetch Articles
 
-Use markdown.new for clean extraction (~80% fewer tokens):
-```bash
-curl -sf "https://markdown.new/[URL]"
+Extract article content:
 ```
-
-Fallback: `web_fetch(url="[URL]", maxChars=8000)`
+web_fetch(url="[URL]", maxChars=8000)
+```
 
 ### 3. Filter
 
@@ -46,7 +38,6 @@ Fallback: `web_fetch(url="[URL]", maxChars=8000)`
 - Skip "what is X" explainers
 - Skip price predictions / TA
 - Prioritize: launches, partnerships, updates, drama, milestones
-- Dedupe against recent research
 
 ### 4. Present
 
@@ -124,7 +115,7 @@ Fallback: `web_fetch(url="[URL]", maxChars=8000)`
 
 ## Brand Voice (Optional)
 
-For branded content, create `brand-config.md` in your workspace with:
+For branded content, create a `brand-config.md` file with your voice guidelines:
 
 ```markdown
 # Brand: [Name]
@@ -132,25 +123,15 @@ For branded content, create `brand-config.md` in your workspace with:
 ## Voice
 - [Tone descriptor]
 - [Communication style]
-- [Key principles]
 
 ## Avoid
 - [Things not to say]
-- [Tone to avoid]
 
 ## Include
 - [Required elements]
-- [Preferred framing]
-
-## Platform-Specific
-### Reddit
-[Subreddit-specific guidelines]
-
-### X/Twitter
-[Handle, hashtags, style]
 ```
 
-When generating branded content, read brand config first and apply guidelines.
+When generating branded content, reference your brand config for consistency.
 
 ---
 
@@ -165,17 +146,7 @@ User: 2 for reddit
 
 Agent: [5 Reddit angles for finding #2]
 
-User: angle 3, make it for r/ethereum
+User: angle 3
 
 Agent: [Ready-to-post content]
 ```
-
----
-
-## Scheduling (Optional)
-
-```
-Schedule daily research for [topic] at [time]
-```
-
-Creates cron job → saves to `memory/research/[topic]-[date].md` → notifies when ready.
